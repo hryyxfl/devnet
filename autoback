@@ -1,86 +1,7 @@
-# net_connect.send_command() #向下发送命令，返回输出（基于模式） Cisco下特权模式
-# net_connect.send_command_timing() #沿通道发送命令，返回输出（基于时序）
-# net_connect.send_config_set() #将配置命令发送到远程设备   cisco 下全局模式
-# net_connect.send_config_from_file() #发送从文件加载的配置命令
-# net_connect.save_config() #将running#config保存到startup#config
-# net_connect.enable() #输入启用模式
-# net_connect.find_prompt() #返回当前路由器提示符
-# net_connect.commit() #在Juniper和IOS#XR上执行提交操作
-# net_connect.disconnect() #关闭连接
-# net_connect.write_channel() #通道的低级写入
-# net_connect.read_channel() #通道的低级写入
-#
-#
-#!/usr/bin/python3
 #-*- coding:utf-8 -*-
-# ScriptName:  Huawei_Autoconfig.py
-# Create Date: 2020-07-08 16:35
-# Modify Date: 2020-07-08 16:35
-#***************************************************************#
-# from netmiko import ConnectHandler,NetmikoTimeoutException,NetmikoAuthenticationException #引入netmiko连接模块、报错模块
-# import getpass #引入密码模块
-# import time #引入时间模块
-# date = time.strftime('%Y%m%d', time.localtime()) #赋予date变量
-# password = getpass.getpass('Password:') #赋予password变量
-#
-# host={
-# '192.168.1.10',
-# '192.168.1.11',
-# }; #定义需要下发配置的主机 IP
-#
-# for ip in host: #定义循环
-#     #创建字典
-#     huawei = {
-#     'device_type':"huawei", #定义设备类型
-#     'ip':ip, #调用变量ip
-#     'port':'22', #指定端口，默认为22
-#     'username':'admin', #设备登录名
-#     'password':password, #调用getpass模块
-#     #'secret' : 'admin' #enable密码
-#     }
-#     try:
-# 	huawei_connect = ConnectHandler(**huawei) #传入设备字典与设备建立SSH连接。
-# 	print ("Sucessfully Login to",ip)
-# 	print ("Building configuration...")
-# 	config = ['命令一'，'命令二','命令三'] #定义需要配置的命令
-# 	input = huawei_connect.send_config_set(config) #执行命令
-# 	print(input) #打印输出结果
-# 	print(ip,'Was finished!\n',"-"*100)
-#     except NetmikoAuthenticationException : #认证失败报错记录
-# 	e1 = open(f'{date}.txt','a')
-# 	print(date,ip,'[Error 1] Authentication failed.\n',file = e1)
-# 	e1.close
-#     except NetmikoTimeoutException : #登录超时报错记录
-# 	e2 = open(f'{date}.txt','a')
-# 	print(date,ip,'[Error 2] Connection timed out.\n',file = e2)
-# 	e2.close
-#     except : #未知报错记录
-# 	e3 = open(f'{date}.txt','a')
-# 	print(date,ip,'[Error 3] Unknown error.\n',file = e3)
-# 	e3.close
-# huawei_connect.disconnect() #断开SSH连接
-#
-#
-#
-#
-#
-# 当主机出现不可达或者密码错误时，在执行过程中会自动创建以日期命名的 txt 文件，记录失败主机 IP 、时间和原因，如下：
-#
-# C:\Users\Administrator> more 20200709.txt
-# 20200708 192.168.1.11 [Error 1] Authentication failed.
-# 20200708 192.168.1.12 [Error 2] Connection timed out.
-# 20200708 192.168.1.13 [Error 3] Unknown erro
-#
-
-
-
-
-
-
-
 
 from netmiko import ConnectHandler
-from getpass import getpass
+
 sw = {
     'device_type': 'hp_comware',
     'host': '88.0.0.8',
@@ -89,42 +10,12 @@ sw = {
 
 }
 
-# sw['host'] = input('请输入交换机管理IP地址:').strip()
-# sw['username'] = input('请输入交换机登录用户名：').strip()
-# sw['password'] = input('请输入交换机登录密码：').strip()
-# # name = input('备份文件命名：')
-
-
-# connect = ConnectHandler(**sw)
-# print('交换机登录成功')
-# connect.send_command('system view')
-# print("ko")
-# connect.send_command('display current-configuration ')
-# print('ok')
-#
-# # f = open(file="D:/switch/name.txt",mode="r")
-# # f.write(backfile)
-# # f.close()
-# with open('D:/switch/name.txt',mode='wt',encoding='utf-8') as f :
-#     f.write(backfile)
-# print("ko")
-
-# Will automatically 'disconnect()'
 with ConnectHandler(**sw) as net_connect:
-    # net_connect.enable()
-    # full_config = ''
-    # cmd = ['display current-configuration']
-    # net_connect.send_config_set('screen-length disable')
-    print("ok")
-    #  注意，dis cur 命令只能显示一部分内容，需要显示全部内容，必须使用这个命令 <H3C> screen-length dis
-    input = net_connect.send_command_timing('dis current-configuration')
-    # new = full_config +input
-    # print(input)
-
-
+      print("登录成功")
+      #   注意，dis cur 命令只能显示一部分内容，需要显示全部内容，必须使用这个命令 <H3C> screen-length dis
+      input = net_connect.send_command_timing('dis current-configuration')  
 
 name = sw['host']
-
 
 with open('D:/switch/ {}.txt'.format(name),mode='wt',encoding='utf-8') as f :
     f.write(input)
