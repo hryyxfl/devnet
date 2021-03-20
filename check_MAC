@@ -1,1 +1,30 @@
 
+
+
+from netmiko import ConnectHandler
+
+sw = {
+    'device_type': 'hp_comware',
+    'host': '88.0.0.8',
+    'username': 'root',
+    'password': '184020',
+
+}
+
+host = sw("host")
+
+mac_add = input("请输入查找的MAC地址：").strip()
+
+with ConnectHandler(**sw) as net_connect:
+   print("登录成功")
+   mac_table = net_connect.send_command('display mac-address | include {}'.format(mac_add))
+   if mac_table == "":
+      print("mac地址不存在")
+   elif True:
+      list1 = mac_table.split()
+      intg = list1[3].replace('GE','interface GigabitEthernet ')
+      
+   int_type  =   net_connect.send_command('display current-configuration  {} | include access '.format(intg))
+   
+   if int_type != '':
+      print("{}地址在{}交换机上的{}接口下".format(mac_add,host,intg))
